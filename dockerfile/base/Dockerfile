@@ -15,3 +15,6 @@ RUN cd /home/deployer/apps \
 
 ENV JAVA_HOME="/home/deployer/apps/jdk"
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
