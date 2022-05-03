@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  es1:
+    image: openreg.closememo.com/closememo/elasticsearch:0.1
+    volumes:
+      - type: volume
+        source: data1
+        target: /usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    environment:
+      - cluster.name=closememo
+      - node.name=es1
+      - bootstrap.memory_lock=true
+      - cluster.initial_master_nodes=es1
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - elasticsearch
+  kibnana:
+    image: docker.elastic.co/kibana/kibana:7.17.3
+    ports:
+      - 5601:5601
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - ELASTICSEARCH_HOSTS=http://es1:9200
+    networks:
+      - elasticsearch
+    depends_on:
+      - es1
+
+networks:
+  elasticsearch:
+
+volumes:
+  data1:

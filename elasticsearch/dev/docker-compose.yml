@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  alpha1:
+    image: openreg.closememo.com/closememo/elasticsearch:0.1
+    volumes:
+      - type: volume
+        source: alpha1
+        target: /usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    environment:
+      - cluster.name=alpha
+      - node.name=alpha1
+      - bootstrap.memory_lock=true
+      - cluster.initial_master_nodes=alpha1
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - elasticsearch
+  kibnana:
+    image: docker.elastic.co/kibana/kibana:7.17.3
+    ports:
+      - 5601:5601
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - ELASTICSEARCH_HOSTS=http://alpha1:9200
+    networks:
+      - elasticsearch
+    depends_on:
+      - alpha1
+
+networks:
+  elasticsearch:
+
+volumes:
+  alpha1:
