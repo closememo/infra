@@ -1,0 +1,1 @@
+docker-compose --file ./compose.yml --project-name local-closememo-kafka up --detach
